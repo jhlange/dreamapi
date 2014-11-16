@@ -28,6 +28,10 @@
 #
 # =CHANGELOG=
 #
+# David Nagle <david(#AT#)randomfrequency.net> - 2014-08-15 v0.3-dnagle
+#  - Removed username option (it is no longer used by the API)
+#  - Changed API output from 'perl' to 'json', as 'perl' output was failing in
+#    the safe eval
 # Joshua Lange <josh(#AT#)joshlange.net>  - 2009-05-04 v0.2-jlange
 #  - PATH improperly obeyed, due to missing last statement in nic lookup
 #  - Fixed improper return value if IP lookup fails
@@ -38,9 +42,9 @@
 use strict;
 use Switch;
 use LWP::UserAgent;
-use Safe;
+use JSON;
 
-my $version = "v0.2-jlange";
+my $version = "v0.3-dnagle";
 
 
 #######################################################
@@ -64,7 +68,7 @@ my $version = "v0.2-jlange";
 #      api key that can manage your dns records
 #
 #  3. EDIT CONFIGURATION below
-#    - put your domain, username, and apikey in
+#    - put your domain and apikey in
 #
 #  4. TEST IT OUT
 #    - run the script with no cli options other than
@@ -93,10 +97,6 @@ my $version = "v0.2-jlange";
 # ORIG: my $domain = undef;
 # CUSTOM: my $domain = 'homecomputer.joshlange.net'
 my $domain = undef;
-
-# ORIG: my $username = undef;
-# CUSTOM: my $username = 'webpanelemail@gmail.com';
-my $username = undef;
 
 # ORIG: my $apikey = undef;
 # CUSTOM: my $apikey = 'ABCDEFGHIJKLMNOP';
@@ -204,7 +204,6 @@ sub usage {
   print STDERR <<ENDOFFILE;
 Usage: $0
   --domain <my_dynamic_hostname>     (e.g. myhomecomputer.mydomain.com)
-  --username <my_webpanel_username>  (e.g. myemail(at)gmail.com)
   --apikey <my_dns_api_key>
   [--nic <my_nic_to_watch>]
   [--ip <my_new_ip>]
@@ -248,39 +247,13 @@ sub genUUID {
   return $rtrn;
 }
 
-#eval() on web content :(
-sub safeEval {
-  my ($content) = @_;
-  my $result1;
-  my $evaluator = new Safe;
-  #http://perl.active-venture.com/lib/Opcode.html
-  $evaluator->permit_only(qw(null scalar const pushmark padany lineseq rv2sv list anonlist anonhash sassign leaveeval refgen));
-  #um...doesn't work?
-  $evaluator->share('$result1');
-
-  undef $@;
-  $result1 = $evaluator->reval($content);
-  if ($@) {
-    my $error_string = "E: invalid or unsafe response from DreamHost: $@";
-    chomp($error_string);
-    logmsg($error_string,2);
-    $result1 = {'data' => 'dreamhost_bad_response', 'result' => 'error'};
-  } elsif (!defined($result1)) {
-    logmsg("E: DreamHost failed to set result1 in response", 2);
-    $result1 = {'data' => 'dreamhost_bad_response', 'result' => 'error'};
-  }
-
-  return $result1;
-}
-
 sub sendDreamhostCmd {
   my ($cmd, $post_data) = @_;
   my %full_post_data = ();
   my $response;
   $full_post_data{$_} = $post_data->{$_} foreach(keys %$post_data);
-  $full_post_data{'username'} = $username;
   $full_post_data{'key'} = $apikey;
-  $full_post_data{'format'} = 'perl';
+  $full_post_data{'format'} = 'json';
   $full_post_data{'cmd'} = $cmd;
   $full_post_data{'unique_id'} = genUUID;
 
@@ -306,7 +279,7 @@ sub sendDreamhostCmd {
     sleep(8)
   }
   if ($response && $response->is_success) {
-    $result1 = safeEval($response->content);
+    $result1 = decode_json $response->content;
   } else {
     logmsg("E: network issues prevented contacting dreamhost during $cmd",2);
   }
@@ -506,7 +479,6 @@ for(my $i = 0; $i <= $#ARGV; $i++) {
     case '--timeout' {$timeout = $ARGV[++$i];}
     case '--tries' {$tries = $ARGV[++$i];}
     case '--domain' {$domain = $ARGV[++$i];}
-    case '--username' {$username = $ARGV[++$i];}
     case '--help' {usage();}
     else { usage("E: INVALID OPTION: ". $ARGV[$i]); }
   }
@@ -515,8 +487,6 @@ for(my $i = 0; $i <= $#ARGV; $i++) {
 #check options
 usage("E: invalid apikey")
     unless(defined($apikey) && !($apikey =~ /^\-\-/));
-usage("E: invalid username")
-    unless(defined($username) && !($username =~ /^\-\-/));
 usage("E: invalid ipurl") unless (defined($ipurl) && $ipurl =~ /^https?:\/\//);
 usage("E: invalid IP") if (defined($ip) && !($ip =~ /^(\d{1,3}\.){3}\d{1,3}$/));
 usage("E: invalid timeout") unless(defined($timeout) && $timeout =~ /^\d+$/);
