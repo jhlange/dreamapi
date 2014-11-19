@@ -1,0 +1,153 @@
+<html>
+<head>
+  <title>DreamAPI Programs</title>
+  <style type="text/css">
+    body {
+      margin: 0px;
+      background-color: #EEE;
+    }
+    #info {
+      border: 1px solid #000;
+      position: relative;
+      top: 10px;
+      margin-bottom: 20px;
+      width: 80%;
+      left: 10%;
+      align: center;
+      background-color: #FFFFFF;
+      padding-top: 2px;
+      padding-left: 8px;
+    }
+    .blurb {
+      width: 90%;
+    }
+    h3 {
+      margin-bottom: 3px;
+    }
+    .description {
+      padding-left: 10px;
+      font-size: 0.9em;
+    }
+    .description textarea {
+      margin-top: 4px;
+      margin-left: 20px;
+    }
+    
+    .description img {
+      margin-top: 6px;
+    }
+
+    .description ul {
+      margin-top: 6px;
+    }
+    .progdescr {
+      font-size: 0.8em;
+      #float: right;
+      width: 500px;
+      text-align: justify;
+    }
+    .left {
+      #float: left;
+      padding-right: 40px;
+    }
+    .image, .progname {
+      #width: 550px;
+    }
+    .program .image, .program .progname {
+      text-align: center;
+    }
+    .program {
+      padding-top: 20px;
+      padding-right: 20px;
+    }
+  </style>
+</head>
+
+
+<body><div id="info">
+  <h2>Select a program...</h2>
+  You have reached a page with 3 scripts that I have made to access the DreamHost API's<br>
+  Have fun!<br>
+  <hr />
+  <table id="programlist">
+  
+    <tr>
+      <td>
+        <div class="program" onclick="document.location.href = 'http://www.joshlange.net/dreamapi/dreamdns';">
+          <div class="image">
+            <img height="395" width="548" src="dreamdns/dreamdns.png" alt="dreamdns"></img>
+          </div>
+          <div class="progname">
+            <a href="dreamdns/index.html">DreamDNS Updater (Dynamic DNS)</a>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="progdescr">
+        This program runs much like DynDNS Updater, as a daemon
+	on your computer (actually, this one has a lot less configuration ;-) ).
+	When the IP of your system changes, the updater will give
+	dreamhost your new IP. The idea is, you can have a static hostname
+	for your home/office/etc computer, like worldbridge.joshlange.net.
+	<br><br>
+	Assuming that you have services like SSH or rdesktop open to the net,
+	you can connect to you computer from anywhere, for free!
+        </div>
+      </td>
+    </tr>
+
+
+    <tr>
+      <td>
+        <div class="progdescr">
+        Do you have all your data scattered around Excel documents?<br>
+        Do you spend many hours manually inputting this data into dreamhost?<br>
+        <br>
+        Well DreamCSV is the program for you!
+        <ul>
+          <li>Full API support, will also work with future API additions</li>
+          <li>Make an Excel document, save it as a CSV, and syncronize it with dreamhost</li>
+          <li>Export DreamHost data into a CSV document, for importation into other programs</li>
+        </ul>
+        </div>
+      </td>
+      <td>
+        <div class="program">
+          <div class="image" onclick="document.location.href = 'http://www.joshlange.net/dreamapi/dreamcsv';">
+            <img height="395" width="548" src="dreamcsv/dreamcsv.png" alt="dreamcsv"></img>
+          </div>
+          <div class="progname">
+            <a href="dreamcsv/index.html">DreamCSV</a>
+          </div>
+        </div>
+      </td>
+    </tr>
+
+
+
+    <tr>
+      <td>
+        <div class="program" onclick="document.location.href = 'http://www.joshlange.net/dreamapi/dreamcli';">
+          <div class="image">
+            <img height="395" width="548" src="dreamcli/dreamcli.png" alt="dreamcli"></img>
+          </div>
+          <div class="progname">
+            <a href="dreamcli/index.html">DreamCLI</a>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="progdescr">
+        Not everyone likes web scripting, or the web for that matter. So, why is the DreamHost API stuck on the web?
+        <br><br>
+        This is the simplest tool I am offering up. It is a simple wrapper that will let you access all the API functions purely via the command line.
+        <br><br>
+        No fancy tricks needed!
+        </div>
+      </td>
+    </tr>
+
+   
+  </table>
+</div></body>
+</html>

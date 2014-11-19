@@ -1,0 +1,231 @@
+<html>
+<head>
+  <title>DreamDNS Dynamic DNS Updater</title>
+  <style type="text/css">
+    body {
+      margin: 0px;
+      background-color: #EEE;
+    }
+    #info {
+      border: 1px solid #000;
+      position: relative;
+      top: 10px;
+      margin-bottom: 20px;
+      width: 80%;
+      left: 10%;
+      align: center;
+      background-color: #FFFFFF;
+      padding-top: 2px;
+      padding-left: 8px;
+    }
+    .blurb {
+      width: 90%;
+    }
+    h3 {
+      margin-bottom: 3px;
+    }
+    .description {
+      padding-left: 10px;
+      font-size: 0.9em;
+    }
+    .description textarea {
+      margin-top: 4px;
+      margin-left: 20px;
+    }
+    
+    .description img {
+      margin-top: 6px;
+    }
+
+    .description ul {
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+
+<body><div id="info">
+  <h2>DreamDNS Updater</h2>
+  <p style='color: #555; font-style: italic; font-size: 1.5em;'>***&nbsp;&nbsp;updated 2014-11-16 due to issues on new versions of perl&nbsp;&nbsp;***</p>
+  <div class="blurb">
+    <h3>Purpose</h3>
+    <div class="description">
+      This script was made to keep dns records available for my home network (<a href="http://en.wikipedia.org/wiki/Dynamic_DNS">Dynamic DNS</a>).
+      <br><br>
+      Oh, and the <a href="http://blog.dreamhost.com/2009/04/09/big-boy-time/">DreamHost API contest</a>
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>Why?</h3>
+    <div class="description">
+      I've been using dyndns.org for several years now. Well, it does work, but there are several problems
+      with it. Mainly the free version has many limitations:
+      <ul>
+        <li>You can only track 5 hosts (even if you pay $10/year, as I do, this is still capped to some number)</li>
+        <li>Hostnames randomly get deleted (If you don't update them for long enough, your names go away!)</li>
+        <li>If you forget to pay your dues (for the paid service), all but 5 of your domains get instantly deleted</li>
+        <li>It's not a domain I control; I've been forced, up until now, to make a CNAME from my DreamHost domain to a dyndns domain</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>How it works</h3>
+    <div class="description">
+      This first thing the script does is determine your IP. There are several ways to do this, and the script
+      supports supports a few of them:
+      <ul>
+        <li>Use a web service (*DEFAULT*)</li>
+	<ul>
+	  <li>Defaults to a service I set up</li>
+	  <li>Usually the most accurate, works behind NAT</li>
+	  <li>Can use *ANY* ip web service, even html ones, as long as perl's UA isn't blocked</li>
+	</ul>
+	<li>Track a network card's IP</li>
+	<ul>
+	  <li>This works well on local networks</li>
+	  <li>Use "windows" as your network card in Windows</li>
+	</ul>
+	<li>Manually specify an IP to use</li>
+	<ul>
+	  <li>try using in conjunction with the --once option</li>
+	  <li>Works well if you have another script deciding what to update</li>
+	  <li>e.g. ./dreamdns.pl --once --domain homerouter1.mydomain.com --ip 127.0.0.1</li>
+	</ul>
+      </ul>
+      Then, the script begins looping, and updating dns for your domain as necessary (unless you specify --once).
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>Supported Platforms</h3>
+    <div class="description">
+      I personally use several different platforms, and I know how imporant it is to support them all.
+      <ul>
+        <li>This script should work on any modern OS platform supporting perl.</li>
+	<li>Unfortunately, the --nic option requires you to run a "supported" platform. They are currently:</li>
+	<ul>
+	  <li>Most, if not all, Linux distros</li>
+	  <li>MacOS</li>
+	  <li>Solaris</li>
+	  <li>BSD</li>
+	  <li>Others.....(with BSD style ifconfig)</li>
+	  <li>...And Windows <b>(but, you should use  <a href="https://github.com/mattgwagner/Dreamhost-Dynamic-DNS-Updater">this</a> instead)</b></li>
+	</ul>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>Getting Started</h3>
+    <div class="description">
+      The easiest way to get started with DreamDNS is to download it, and run it on the command line.
+      <ul>
+        <li>Install perl from your operating system's package manager, if you don't already have perl</li>
+        <li>If you are using windows, install <a href="http://www.activestate.com/activeperl/">ActivePerl</a> for Windows</li>
+        <li>If you get a "bad interperter" error, put the correct path to perl on line 1 of the script</li>
+        <li><b>NOTE: Windows users, you should probably be using this <a href="https://github.com/mattgwagner/Dreamhost-Dynamic-DNS-Updater">Windows alternative</a></b></li>
+      </ul>
+      <div align="center"><img src="dreamdns.png"></img></div>
+    </div>
+  </div>
+
+  <div class="blurb">
+    <h3>Daemon/Service setup</h3>
+    <div class="description">
+      Yes! It's possible! It's easy!
+      <ol>
+        <li>Install perl</li>
+	<ul>
+	  <li>You probably already have it.</li>
+	  <li>On Windows, install <a href="http://www.activestate.com/activeperl/">ActivePerl</a></li>
+	</ul>
+        <li><a href="https://panel.dreamhost.com/?tree=home.api">Generate an API key</a></li>
+	<ul>
+	  <li>Make sure that dns-* is checked</li>
+	  <li>Uncheck everything else</li>
+	</ul>
+        <li>Edit configuration (so you don't need to give cli arguements)</li>
+	<ul>
+	  <li>In a text editor, put your api key and domain into the script where indicated.</li>
+	</ul>
+        <li>Test out the script</li>
+	<ul>
+	  <li>Open a terminal, and run the script without any cli options, other then: --verbosity 5</li>
+	</ul>
+        <li>Make your OS run it at boot!</li>
+	<ul>
+	  <li>Linux</li>
+	  <ul>
+	    <li>Add "su  username  -c '/path/to/script/dreamdns.pl --daemon' " to your /etc/rc.local or /etc/init.d/rc.local</li>
+	    <li>replace username with a valid unprivileged non-root username</li>
+	    <li>NOTE: Your system may stall on boot if you don't give the "--daemon" option</li>
+	  </ul>
+	  <li>Windows</li>
+	  <ul>
+	    <li>Consult <a href="http://support.microsoft.com/kb/251192">http://support.microsoft.com/kb/251192</a> about adding a service</li>
+	    <li>You probably SHOULD NOT use the "--daemon" option with windows, so that windows can properly monitor the service</li>
+	  </ul>
+	  <li>Others</li>
+	  <ul>
+	    <li>Consult proper documentation</li>
+	    <li>launch with the "--daemon" option, or set daemonize = 1 in the script's config</li>
+	  </ul>
+	</ul>
+      </ol>
+    </div>
+  </div>
+  
+
+  <div class="blurb">
+    <h3>License</h3>
+    <div class="description">
+      Without any license research I quickly wrote my own, I call it the Josh Public License<br>
+      <textarea cols="80" rows="14" readonly>
+You are free to modify/distribute this script as you like, but know that you
+are using this script AT YOUR OWN RISK! None of the script's contributors
+take any liability for the scripts actions, inactions, bugs, vulnerabilities
+or any malicious content which could have easily been added by a third party.
+IT IS YOUR RESPONSIBILITY TO INSPECT THE CODE.
+
+RULES FOR MODIFICATIONS
+1. Keep this disclaimer and set of rules in the script.
+2. Attribute your changes, with a small amount of detail in the changelog
+ below.
+3. Change the version info to include your name.
+4. Leave comments where appropriate.
+5. (optional) Contact the script maintainers if you want to contribute
+ improvements.</textarea>
+    </div>
+  </div>
+
+  <div class="blurb">
+    <h3>Contest specifics</h3>
+    <div class="description">
+    I saw another submission had this, so I am adding it.
+      <li>Submitted: May 2nd, 2009</li>
+      <li>Application Name: DreamDNS Updater</li>
+      <li>API Functions Used: dns-*</li>
+    </div>
+  </div>
+
+  <div class="blurb">
+    <h3>Download</h3>
+    <div class="description">
+      8-15-14 v0.3 is available
+      <ul>
+        <li>The script now works with more modern versions of perl</li>
+      </ul>
+      <br><a href="https://github.com/jhlange/dreamapi/tree/master/dreamdns">view on github</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/jhlange/dreamapi/archive/master.zip">(direct download)</a>
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3></h3>
+    <div class="description">
+    </div>
+  </div>
+  
+</div></body>
+</html>

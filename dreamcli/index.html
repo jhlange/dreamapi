@@ -1,0 +1,196 @@
+<html>
+<head>
+  <title>DreamCLI Wrapper</title>
+  <style type="text/css">
+    body {
+      margin: 0px;
+      background-color: #EEE;
+    }
+    #info {
+      border: 1px solid #000;
+      position: relative;
+      top: 10px;
+      margin-bottom: 20px;
+      width: 80%;
+      left: 10%;
+      align: center;
+      background-color: #FFFFFF;
+      padding-top: 2px;
+      padding-left: 8px;
+    }
+    .blurb {
+      width: 90%;
+    }
+    h3 {
+      margin-bottom: 3px;
+    }
+    .description {
+      padding-left: 10px;
+      font-size: 0.9em;
+    }
+    .description textarea {
+      margin-top: 4px;
+      margin-left: 20px;
+    }
+    
+    .description img {
+      margin-top: 6px;
+    }
+
+    .description ul {
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+
+<body><div id="info">
+  <h2>DreamCLI (DreamHost API CLI Wrapper)</h2>
+  <div class="blurb">
+    <h3>Purpose</h3>
+    <div class="description">
+      This script was made as a wrapper to the DreamHost API, so that it can easily be used on the
+      command line, or by other scripts.
+      <br><br>
+      Oh, and the <a href="http://blog.dreamhost.com/2009/04/09/big-boy-time/">DreamHost API contest</a>
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>Why?</h3>
+    <div class="description">
+      Because web scripting can be annoying. Especially for those of us who are used to BASH or other types of
+      scripting. Or, maybe we just perfer the command line?
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>How it works</h3>
+    <div class="description">
+      Simple, it takes all the options you set in the confuration, and all your command line options,
+      and it sends them over to dreamhost. The result is printed (tab format). The error code is returned
+      as an error code, like CLI programs usually do, and any extra error information is printed to STDERR,
+      so that it doesn't get in the way of a script thats trying to use the command output.
+      <br><br>
+      Some of the features to help your scripting/use:
+      <ul>
+        <li>If you forget the dreamhost commands, simply omit --cmd, and you will be given your accessable commands</li>
+        <li>You can specify --noheader, so that the column names get stripped out</li>
+        <li>You can specify --cols col1,col2,colN... to print out only the columns you want, in the order you want</li>
+      </ul>
+      Examples? Sure.
+      <ul>
+        <li>./dreamcli.pl --help</li>
+        <li>./dreamcli.pl --cmd domain-list_domains --cols domain --noheaders  #prints out all your domain names</li>
+        <li>./dreamcli.pl --cmd domain-list_domains  #prints out everything</li>
+        <li>./dreamcli.pl --cmd announcement_list-list_subscribers --listname list1 --domain joshlange.net --cols email,name</li>
+      </ul>
+      Can I change things? Of course...
+      <ul>
+        <li>./dreamcli.pl --cmd dns-add_record --record mycomputer.mydomain.com --type A --value 4.2.2.2</li>
+      </ul> 
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>Supported Platforms</h3>
+    <div class="description">
+      I personally use several different platforms, and I know how imporant it is to support them all. Any platform
+      that supports perl is supported by this script.
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>Getting Started</h3>
+    <div class="description">
+      The easiest way to get started with DreamCLI is to download it, and run it on the command line.
+      <ul>
+        <li>Install perl from your operating system's package manager, if you don't already have perl</li>
+        <li>If you are using windows, install <a href="http://www.activestate.com/activeperl/">ActivePerl</a> for Windows</li>
+        <li>If you get a "bad interperter" error, put the correct path to perl on line 1 of the script</li>
+      </ul>
+      <div align="center"><img src="dreamcli.png"></img></div>
+    </div>
+  </div>
+
+  <div class="blurb">
+    <h3>Setup</h3>
+    <div class="description">
+      The setup is very straight forward.
+      <ol>
+        <li>Install perl</li>
+	<ul>
+	  <li>You probably already have it.</li>
+	  <li>On Windows, install <a href="http://www.activestate.com/activeperl/">ActivePerl</a></li>
+	</ul>
+        <li><a href="https://panel.dreamhost.com/?tree=home.api">Generate an API key</a></li>
+	<ul>
+	  <li>Make sure that anything you want is checked</li>
+	  <li>Uncheck everything else</li>
+	</ul>
+        <li>Edit configuration (so you don't need to give cli arguements, optional)</li>
+	<ul>
+	  <li>In a text editor, put your api key, username, and domain into the script where indicated.</li>
+	</ul>
+        <li>Test out the script</li>
+	<ul>
+	  <li>Open a terminal, and run the script</li>
+	  <li>View the available dreamhost api commands with options here: <a href="http://wiki.dreamhost.com/Application_programming_interface#List_of_API_Modules">http://wiki.dreamhost.com/Application_programming_interface#List_of_API_Modules</a></li>
+	</ul>
+      </ol>
+    </div>
+  </div>
+  
+
+  <div class="blurb">
+    <h3>License</h3>
+    <div class="description">
+      Without any license research I quickly wrote my own, I call it the Josh Public License<br>
+      <textarea cols="80" rows="14" readonly>
+You are free to modify/distribute this script as you like, but know that you
+are using this script AT YOUR OWN RISK! None of the script's contributors
+take any liability for the scripts actions, inactions, bugs, vulnerabilities
+or any malicious content which could have easily been added by a third party.
+IT IS YOUR RESPONSIBILITY TO INSPECT THE CODE.
+
+RULES FOR MODIFICATIONS
+1. Keep this disclaimer and set of rules in the script.
+2. Attribute your changes, with a small amount of detail in the changelog
+ below.
+3. Change the version info to include your name.
+4. Leave comments where appropriate.
+5. (optional) Contact the script maintainers if you want to contribute
+ improvements.</textarea>
+    </div>
+  </div>
+
+  <div class="blurb">
+    <h3>Contest specifics</h3>
+    <div class="description">
+    I saw another submission had this, so I am adding it.
+      <li>Submitted: May 3rd, 2009</li>
+      <li>Application Name: DreamCLI Wrapper</li>
+      <li>API Functions Used: all</li>
+    </div>
+  </div>
+
+  <div class="blurb">
+    <h3>Download</h3>
+    <div class="description">
+      05-04-09 v0.2 is now available
+      <ul>
+        <li>You can now specify to only print certain columns with --cols</li>
+        <li>--nocols option renamed to --noheaders</li>
+      </ul>
+      <br><a href="https://github.com/jhlange/dreamapi/tree/master/dreamcli">view on github</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/jhlange/dreamapi/archive/master.zip">(direct download)</a>
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3></h3>
+    <div class="description">
+    </div>
+  </div>
+  
+</div></body>
+</html>

@@ -1,0 +1,220 @@
+<html>
+<head>
+  <title>DreamCSV Import/Export Tool</title>
+  <style type="text/css">
+    body {
+      margin: 0px;
+      background-color: #EEE;
+    }
+    #info {
+      border: 1px solid #000;
+      position: relative;
+      top: 10px;
+      margin-bottom: 20px;
+      width: 80%;
+      left: 10%;
+      align: center;
+      background-color: #FFFFFF;
+      padding-top: 2px;
+      padding-left: 8px;
+    }
+    .blurb {
+      width: 90%;
+    }
+    h3 {
+      margin-bottom: 3px;
+    }
+    .description {
+      padding-left: 10px;
+      font-size: 0.9em;
+    }
+    .description textarea {
+      margin-top: 4px;
+      margin-left: 20px;
+    }
+    
+    .description img {
+      margin-top: 6px;
+    }
+
+    .description ul {
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+
+<body><div id="info">
+  <h2>DreamCSV (CSV importer/exporter)</h2>
+  <div class="blurb">
+    <h3>Purpose</h3>
+    <div class="description">
+      This script was made to help DreamHost users import and export
+      data from the dreamhost API into csv files, which they can modify offline
+      and then re-import.
+      <br><br>
+      Oh, and the <a href="http://blog.dreamhost.com/2009/04/09/big-boy-time/">DreamHost API contest</a>
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>Why?</h3>
+    <div class="description">
+      To be totally honest, I hate CSV, and I hate using spreadsheets. But,
+      From time to time, it is the easiest way to communicate with people.
+      There are many advantages to using CSV, as many of you know, you can
+      load CSV files as tables into Excel. Do you already have lists of email
+      addresses in spreadsheets? Business contacts? DNS records? Is someone
+      in your organization manually entering this data into dreamhost?
+      <br><br>
+      In many cases, it may be easier to to all these updates in Excel, and
+      sync the updates with DreamHost
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>How it works</h3>
+    <div class="description">
+      The CSV importer is a "generic" importer, meaning that you can use it
+      with any of the dreamhost API features. There are 2 main modes of
+      operation:
+      <ul>
+        <li>send (imports a CSV file into dreamhost, can delete stuff too!)</li>
+        <ul>
+          <li>e.g. ./dreamcsv --send data.csv --cmd dns-add_record</li>
+          <li>e.g. ./dreamcsv --send data.csv --cmd dns-remove_record</li>
+          <li>e.g. ./dreamcsv.pl --send list1.csv --cmd announcement_list-add_subscriber --listname list1 --domain joshlange.net</li>
+        </ul>
+        <li>recieve (exports data from dreamhost into a CSV)</li>
+        <ul>
+          <li>e.g. ./dreamcsv --receive data.csv --cmd dns-list_records</li>
+        </ul>
+      </ul>
+      Forgot the name of the command you want to use? Yeah, they are a bit tedius<br>
+      to remember.....<br>
+      But, thats not a problem! just omit --cmd, and you will be reminded what you have access to.<br>
+      <ul>
+        <li>./dreamcsv.pl --send list1.csv</li>
+      </ul>
+      DreamCSV doesn't check to make sure a record doesn't exist before it tries<br>
+      to write it. But, this should be ok, because the dreamhost API commands that<br>
+      I've tried fail gracefully. What do I mean? well....Try adding a dns record that<br>
+      exists. No harm done.<br><br>
+      Just make sure you don't delete anything important ;-)
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>Supported Platforms</h3>
+    <div class="description">
+      Any platform that supports perl. This includes Windows, Linux, and MacOS.
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3>Getting Started</h3>
+    <div class="description">
+      The easiest way to get started with DreamCSV is to download it, and run it on the command line.
+      <ul>
+        <li>Install perl from your operating system's package manager, if you don't already have perl</li>
+        <li>IMPORTANT: install Text::CSV_XS (NOT Text::CSV)</li>
+        <ul>
+          <li>Available in Windows' Active Perl package manager</li>
+          <li>Available from most linux distro's package managers</li>
+          <li>Available from <a href="http://search.cpan.org/~hmbrand/Text-CSV_XS-0.64/CSV_XS.pm">cpan.org</a>, in the unlikely case you have to install it manually</li>
+        </ul>
+        <li>If you are using windows, install <a href="http://www.activestate.com/activeperl/">ActivePerl</a> for Windows</li>
+        <li>If you get a "bad interperter" error, put the correct path to perl on line 1 of the script</li>
+      </ul>
+      <br>
+      Oh, and if you are really doing subscription list management, I created a few sample batch files for you.<br><br>
+      Once you input the proper values, and put them on a windows desktop, you can send/receive<br>
+      <b>email lists</b> from the dreamhost servers by <b>double clicking!</b>
+      <ul>
+        <li>Great....? For the office administrator, who's in charge of keeping your organization's mailing lists up to date!</li>
+      </ul>
+      <div align="center"><img src="dreamcsv.png"></img></div>
+    </div>
+  </div>
+
+  <div class="blurb">
+    <h3>Setup</h3>
+    <div class="description">
+      <ol>
+        <li>Install perl</li>
+	<ul>
+	  <li>You probably already have it.</li>
+	  <li>On Windows, install <a href="http://www.activestate.com/activeperl/">ActivePerl</a></li>
+	</ul>
+        <li><a href="https://panel.dreamhost.com/?tree=home.api">Generate an API key</a></li>
+	<ul>
+	  <li>Make sure that everything you want to use is checked</li>
+	  <li>Uncheck everything else</li>
+	</ul>
+        <li>Edit configuration (so you don't need to give cli arguements, optional)</li>
+	<ul>
+	  <li>In a text editor, put your api key, username, and into the script where indicated.</li>
+	</ul>
+        <li>Test out the script</li>
+	<ul>
+	  <li>Open a terminal, and run the script: ./dreamcsv.pl --receive test.csv --cmd api-list_accessible_cmds</li>
+	</ul>
+      </ol>
+    </div>
+  </div>
+  
+
+  <div class="blurb">
+    <h3>License</h3>
+    <div class="description">
+      Without any license research I quickly wrote my own, I call it the Josh Public License<br>
+      <textarea cols="80" rows="14" readonly>
+You are free to modify/distribute this script as you like, but know that you
+are using this script AT YOUR OWN RISK! None of the script's contributors
+take any liability for the scripts actions, inactions, bugs, vulnerabilities
+or any malicious content which could have easily been added by a third party.
+IT IS YOUR RESPONSIBILITY TO INSPECT THE CODE.
+
+RULES FOR MODIFICATIONS
+1. Keep this disclaimer and set of rules in the script.
+2. Attribute your changes, with a small amount of detail in the changelog
+ below.
+3. Change the version info to include your name.
+4. Leave comments where appropriate.
+5. (optional) Contact the script maintainers if you want to contribute
+ improvements.</textarea>
+    </div>
+  </div>
+
+  <div class="blurb">
+    <h3>Contest specifics</h3>
+    <div class="description">
+    I saw another submission had this, so I am adding it.
+      <li>Submitted: May 3rd, 2009</li>
+      <li>Application Name: DreamCSV</li>
+      <li>API Functions Used: any</li>
+    </div>
+  </div>
+
+  <div class="blurb">
+    <h3>Download</h3>
+    <div class="description">
+      05-05-09 - v0.3 is now available
+      <ul>
+        <li>If not cmd is specified, the list of available commands is printed out</li>
+        <li>column order is now "stable" and consistent with API's "tab" output</li>
+        <li>better example .bat files, which allow drag and drop import/export</li>
+        <li>fixed escape_char to be the same as what Excel uses (for docs with special characters)</li>
+      </ul>
+      <br><a href="https://github.com/jhlange/dreamapi/tree/master/dreamcsv">view on github</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://github.com/jhlange/dreamapi/archive/master.zip">(direct download)</a>
+    </div>
+  </div>
+  
+  <div class="blurb">
+    <h3></h3>
+    <div class="description">
+    </div>
+  </div>
+  
+</div></body>
+</html>
