@@ -25,9 +25,12 @@
 # 5. (optional) Contact the script maintainers if you want to contribute
 # improvements.
 # 
-#
 # =CHANGELOG=
 #
+# Fabian Rodriguez <fabian(#AT#)legoutdulibre.com>
+#  - Added details and fixed parameter for test command
+#  - Added capitals, fixed some typos
+#  - Added URL and details for Dreamhost API generation instructions
 # David Nagle <david(#AT#)randomfrequency.net> - 2014-08-15 v0.3-dnagle
 #  - Removed username option (it is no longer used by the API)
 #  - Changed API output from 'perl' to 'json', as 'perl' output was failing in
@@ -44,7 +47,7 @@ use Switch;
 use LWP::UserAgent;
 use JSON;
 
-my $version = "v0.3-dnagle";
+my $version = "v0.4-frodriguez";
 
 
 #######################################################
@@ -52,11 +55,11 @@ my $version = "v0.3-dnagle";
 #######################################################
 #  
 #  1. INSTALL PERL
-#    - probably already have it if your not running windows,
+#    - probably already have it if you're not running Windows,
 #      if not, check your package manager
-#    - on windows, install activeperl for windows
-#      http://www.activestate.com/activeperl/
-#    - ALL USERS: Install Crypt::SSLeay, IF you get an error
+#    - on Windows, install ActivePerl for Windows
+#      https://www.activestate.com/activeperl/
+#    - ALL USERS: Install Crypt::SSLeay if you get an error
 #      connecting to DreamHost. It's a required package.
 #      You should be able to get this from your operating
 #      system package maneger, and through the ActiveState
@@ -64,21 +67,22 @@ my $version = "v0.3-dnagle";
 #      it directly from cpan.org)
 #
 #  2. GET AN API KEY
-#    - log into your DreamHost panel, and generate an
-#      api key that can manage your dns records
+#    - log into your DreamHost panel at https://panel.dreamhost.com/?tree=home.api,
+#      choose a name to describe your new API key, check the "All dns functions" checkbox
+#      and generate an API key that can manage your DNS records
 #
 #  3. EDIT CONFIGURATION below
-#    - put your domain and apikey in
+#    - put your domain and API key in (don't forget the single quotes)
 #
 #  4. TEST IT OUT
 #    - run the script with no cli options other than
-#      --verbose 5.
-#      E.X.   ./dreamdns --verbose 5
+#      --verbosity 5.
+#      E.X.   perl ./dreamdns.pl --verbosity 5
 #    - If it works, continue to step 4
 #
 #  5. EDIT OTHER CONFIGURABLE SETTINGS below
 #    - set daemonize  to 1  (UNLESS YOU ARE USING WINDOWS!)
-#    - its easy to accidently start many copies, kill old copies
+#    - its easy to accidentally start many copies, kill old copies
 #      with your task manager before you restart the script.
 #
 #  6. GET YOUR OS TO RUN IT ON BOOT
@@ -91,8 +95,8 @@ my $version = "v0.3-dnagle";
 #######################################################
 #              CONFIGURATION VARIABLES                #
 #######################################################
-#if you don't want to specify cli options
-#fill in these vars
+# If you don't want to specify CLI options
+# fill in these variables.
 
 # ORIG: my $domain = undef;
 # CUSTOM: my $domain = 'homecomputer.joshlange.net'
@@ -106,25 +110,25 @@ my $apikey = undef;
 #######################################################
 #            OTHER CONFIGURABLE SETTINGS              #
 #######################################################
-# defaults should work below, but you can edit them.
+# Defaults should work below, but you can edit them.
 
-# run as a daemon in the background? (DEFAULT=0)
+# Run as a daemon in the background? (DEFAULT=0)
 #  0 = false
 #  1 = true
 my $daemonize = 0;
 
-# update interval, in seconds (DEFAULT=3600)
+# Update interval, in seconds (DEFAULT=3600)
 #  (default = 1/hour)
 my $interval = 60*60;
 
-# force recheck of DreamHost dns settings every so often (DEFAULT=86400)
+# Force recheck of DreamHost DNS settings every so often (DEFAULT=86400)
 #  (default = 1/day)
 my $recheck_secs = 60*60*24;
 
-# network timeout, in seconds (DEFAULT=15)
+# Network timeout, in seconds (DEFAULT=15)
 my $timeout = 15;
 
-# number of retries on network errors (DEFAULT=3)
+# Number of retries on network errors (DEFAULT=3)
 my $tries = 3;
 
 # NIC to watch, if you don't want to do IP lookup service
@@ -138,7 +142,7 @@ my $nic = undef;
 #  CUSTOM: my $ip = '74.125.45.100';
 my $ip = undef;
 
-# verbosity level (DEFAULT=4)
+# Verbosity level (DEFAULT=4)
 #  5  step-by-step info
 #  4  info
 #  3 transient network errors
@@ -147,7 +151,7 @@ my $ip = undef;
 #  0 quiet
 my $verbosity = 4;
 
-# run once, and don't loop? (DEFAULT=0)
+# Run once, and don't loop? (DEFAULT=0)
 #  0 = false
 #  1 = true
 my $once = 0;
@@ -176,7 +180,7 @@ my $ipurl = "http://www.joshlange.net/cgi/get_ip.pl";
 my $agent = undef;
 
 # DreamHost API URL
-#  NOTE: only change this if dreamhost changes the API's
+#  NOTE: only change this if Dreamhost changes the API's
 #  location.
 #
 #  ORIG: my $dreamhost_url = 'https://api.dreamhost.com/';
@@ -188,7 +192,7 @@ my $dreamhost_url = 'https://api.dreamhost.com/';
 #######################################################
 
 
-####### DONT TOUCH ANYTHING BELOW THIS LINE #########
+####### DON'T TOUCH ANYTHING BELOW THIS LINE ########
 ####### (unless you know what you are doing) ########
 my $last_ip = undef;
 my $last_check = 0;
@@ -218,7 +222,7 @@ Usage: $0
   [--once]    (update once)
   [--help]    (this message)
 
-NOTE: There are security implications with using cli arguments on multi-user
+NOTE: There are security implications with using CLI arguments on multi-user
 systems. If applicable, or you don't WANT TO USE THE CLI options, consider
 manually setting these options inside this script.
 
